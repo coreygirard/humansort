@@ -18,6 +18,7 @@ def build_key(s):
     for i in d:
         if isinstance(i, str):
             key.append(i)
+    key = [''.join(key)]
     for i in d:
         if not isinstance(i, str):
             key.append(i)
