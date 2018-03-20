@@ -1,6 +1,5 @@
-from pprint import pprint
 import re
-import random
+
 
 def to_digits(s):
     temp = [i for i in re.split(r'([0-9]+)', s) if i != '']
@@ -8,7 +7,7 @@ def to_digits(s):
     for e in temp:
         try:
             result.append(int(e))
-        except:
+        except ValueError:
             result.append(e)
     return result
 
