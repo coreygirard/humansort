@@ -1,1 +1,1 @@
-from .humansort import sort
+from .sort import sort

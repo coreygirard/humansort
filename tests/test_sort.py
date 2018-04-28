@@ -6,7 +6,6 @@ import itertools
 from hypothesis import given
 from hypothesis.strategies import integers, from_regex, lists, tuples
 
-import sort
 
 
 class TestSort(unittest.TestCase):
