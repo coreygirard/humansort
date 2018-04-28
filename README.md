@@ -29,6 +29,12 @@ filename_20.py
 filename_21.py
 ```
 
+## Installation
+
+```
+pip install humansort
+```
+
 ## Usage
 
 ```python
