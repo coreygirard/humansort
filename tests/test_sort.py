@@ -12,7 +12,7 @@ from src.main import *
 def test_sort():
     """Verifies simple ordering. IE '1' < '2' < '10' < '11' < '20' < '21'
     """
-    data = [f"filename_{i}.py" for i in range(200)]
+    data = ["filename_{}.py".format(i) for i in range(200)]
     temp = data[:]
     random.shuffle(temp)
     assert data == sort(temp)
