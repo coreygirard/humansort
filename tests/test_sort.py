@@ -22,10 +22,10 @@ def test_multi_template():
     """Ensures proper order is preserved with multiple formats
     """
     data = []
-    data.extend([f"{i}_data.json" for i in range(50)])
-    data.extend([f"{i}_log.csv" for i in range(50)])
-    data.extend([f"filename_{i}.py" for i in range(50)])
-    data.extend([f"stuff_{i}.py" for i in range(50)])
+    data.extend(["{}_data.json".format(i) for i in range(50)])
+    data.extend(["{}_log.csv".format(i) for i in range(50)])
+    data.extend(["filename_{}.py".format(i) for i in range(50)])
+    data.extend(["stuff_{}.py".format(i) for i in range(50)])
     temp = data[:]
     random.shuffle(temp)
     assert data == sort(temp)
