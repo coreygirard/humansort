@@ -1,33 +1,35 @@
-import unittest
 import doctest
-import random
 import itertools
+import random
+import unittest
 
 from hypothesis import given
-from hypothesis.strategies import integers, from_regex, lists, tuples
+from hypothesis.strategies import from_regex, integers, lists, tuples
+
+from src.main import *
 
 
+def test_sort():
+    """Verifies simple ordering. IE '1' < '2' < '10' < '11' < '20' < '21'
+    """
+    data = [f"filename_{i}.py" for i in range(200)]
+    temp = data[:]
+    random.shuffle(temp)
+    assert data == sort(temp)
 
-class TestSort(unittest.TestCase):
-    def test_sort(self):
-        """Verifies simple ordering. IE '1' < '2' < '10' < '11' < '20' < '21'
-        """
-        data = [f'filename_{i}.py' for i in range(200)]
-        temp = data[:]
-        random.shuffle(temp)
-        self.assertEqual(data, sort.sort(temp))
 
-    def test_multi_template(self):
-        """Ensures proper order is preserved with multiple formats
-        """
-        data = []
-        data.extend([f'{i}_data.json' for i in range(50)])
-        data.extend([f'{i}_log.csv' for i in range(50)])
-        data.extend([f'filename_{i}.py' for i in range(50)])
-        data.extend([f'stuff_{i}.py' for i in range(50)])
-        temp = data[:]
-        random.shuffle(temp)
-        self.assertEqual(data, sort.sort(temp))
+def test_multi_template():
+    """Ensures proper order is preserved with multiple formats
+    """
+    data = []
+    data.extend([f"{i}_data.json" for i in range(50)])
+    data.extend([f"{i}_log.csv" for i in range(50)])
+    data.extend([f"filename_{i}.py" for i in range(50)])
+    data.extend([f"stuff_{i}.py" for i in range(50)])
+    temp = data[:]
+    random.shuffle(temp)
+    assert data == sort(temp)
+
 
 def gen_index_via_mod(s, n):
     """Converts the provided integer 'n' into a valid insertion point
@@ -36,7 +38,8 @@ def gen_index_via_mod(s, n):
     if len(s) == 0:
         return 0
 
-    return n%(len(s)+1)
+    return n % (len(s) + 1)
+
 
 def remove_adjacent_nums(n):
     """Make sure we don't insert in adjacent locations, otherwise the numbers
@@ -44,9 +47,10 @@ def remove_adjacent_nums(n):
     """
     output = []
     for e in n:
-        if len(output) == 0 or output[-1][0] <= e[0]-2:
+        if len(output) == 0 or output[-1][0] <= e[0] - 2:
             output.append(e)
     return output
+
 
 def split_to_indices_and_values(n):
     indices = []
@@ -58,11 +62,13 @@ def split_to_indices_and_values(n):
             values.append(sorted(list(set(j))))
     return indices, values
 
+
 def build_filename(s, indices, values):
     s = list(s)
     for (n, i), v in zip(enumerate(indices), values):
-        s.insert(n+i, str(v))
-    return ''.join(s)
+        s.insert(n + i, str(v))
+    return "".join(s)
+
 
 def gen_test_case(s, n):
     filenames = []
@@ -77,6 +83,7 @@ def gen_test_case(s, n):
         filenames.append(build_filename(s, indices, v))
 
     return filenames
+
 
 def remove_duplicate_templates(data):
     # make sure that we don't have any duplicate templates
@@ -104,24 +111,17 @@ def gen_test_data(data):
 
     return filenames
 
+
 # Create filename "templates", ie before digits
-strat_strings = from_regex(r'\A[^0-9]*\Z')
-strat_mod = tuples(integers(),
-                   lists(integers(min_value=0), max_size=10))
+strat_strings = from_regex(r"\A[^0-9]*\Z")
+strat_mod = tuples(integers(), lists(integers(min_value=0), max_size=10))
 
 strat = strat_strings, lists(strat_mod, max_size=5)
-class TestSorting(unittest.TestCase):
-    @given(lists(tuples(*strat)))
-    def test_sort(self, e):
-        strings = gen_test_data(e)
-        backup = strings[:]
-        random.shuffle(strings)
-        self.assertEqual(backup, sort.sort(strings))
 
 
-def load_tests(loader, tests, ignore):
-    tests.addTests(doctest.DocTestSuite())
-    return tests
-
-if __name__ == '__main__':
-    unittest.main()
+@given(lists(tuples(*strat)))
+def test_sort_property(e):
+    strings = gen_test_data(e)
+    backup = strings[:]
+    random.shuffle(strings)
+    assert backup == sort(strings)
